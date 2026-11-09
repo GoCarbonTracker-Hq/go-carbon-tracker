@@ -154,3 +154,9 @@ def test_text_claims_with_prefix_currency():
     assert c["period_label"] == "FY24"
     assert "Total spending" in c["metric_text"]
     assert c["boxes"] == [[170, 100, 215, 115]]
+
+
+def test_dated_period_header_never_joins_the_metric_text():
+    assert extract._clean_metric_part("As at March 31, 2025") is None
+    assert extract._clean_metric_part("Year ended 31 Mar 2024") is None
+    assert extract._clean_metric_part("Marine waste") == "Marine waste"

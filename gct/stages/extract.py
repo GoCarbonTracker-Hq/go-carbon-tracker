@@ -42,6 +42,8 @@ NUMBER = re.compile(r"(\(?-?\d(?:[\d,.]*\d)?\)?)(\S*)")
 PREFIX_CURRENCY = re.compile(r"^(₹|Rs\.?|INR)\s*(\(?-?\d(?:[\d,.]*\d)?\)?)(\S*)", re.I)
 WESTERN = re.compile(r"-?\d{1,3}(?:,\d{3})+(?:\.\d+)?|-?\d+(?:\.\d+)?")
 INDIAN = re.compile(r"-?\d{1,2}(?:,\d{2})*,\d{3}(?:\.\d+)?")
+MONTHS = {"january", "february", "march", "april", "may", "june", "july", "august", "september", "october",
+          "november", "december", "jan", "feb", "mar", "apr", "jun", "jul", "aug", "sep", "sept", "oct", "nov", "dec"}
 YEAR = re.compile(r"199\d|20\d\d|2100")
 PERIOD = re.compile(r"(?<!\w)(?<!\d[,.])(?:FY\s?\d{2,4}(?:-\d{2,4})?|\d{4}-\d{2,4}|199\d|20\d\d|2100)(?!\w|[,.]\d)")
 FOOTNOTE_RE = re.compile(r"^[\*#†\^]+$|^\([a-g]\)$", re.I)
@@ -265,7 +267,8 @@ def _clean_metric_part(text: str | None) -> str | None:
     no_paren = re.sub(r"\([^()]*\)", "", clean_no_foot).strip()
     no_period = PERIOD.sub("", no_paren)
     words = re.findall(r"[a-zA-Z]{2,}", no_period)
-    substantive = [w for w in words if w.lower() not in ("fy", "as", "at", "ended", "year", "date", "unit", "units", "uom")]
+    substantive = [w for w in words if w.lower() not in ("fy", "as", "at", "ended", "year", "date", "unit", "units", "uom")
+                   and w.lower() not in MONTHS]
     if not substantive:
         return None
     return clean_no_foot
