@@ -6,10 +6,18 @@ import pytest
 
 from conftest import make_pdf
 from test_deletion import delete, scan
-from test_match import BOTH, SCOPE_1, WHO, ids, ready
+from test_match import BOTH, SCOPE_1, WHO, ready
 from test_restate import QUOTE, acme, add, cp2, page_of  # noqa: F401 (acme is a fixture)
 from test_review import rec
 from gct.workspace import layout, published, runs, store
+
+
+def ids(gct, doc) -> dict:
+    """{(metric text, period label): claim id} of one document's claims that carry a value; word and string claims
+    (a reporting boundary statement, 90d5f04) have none."""
+    return {(c["metric_text"], c["period_label"]): c["id"]
+            for c in gct("claims", "list", "--doc", doc, "--json").data["claims"] if c["value"] is not None}
+
 
 ADJ = ("low_version_id, high_version_id, state, rationale, procedure, counter_document_id, counter_page, counter_note,"
        " contributor_version_id, capacity, created_at")
