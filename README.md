@@ -85,7 +85,7 @@ Installs `gct` into an isolated virtual environment:
 
 ```bash
 # Clone the repository
-git clone https://github.com/GoCarbonTracker/go-carbon-tracker.git
+git clone https://github.com/mokagtc/go-carbon-tracker.git
 cd go-carbon-tracker
 
 # Create and activate virtual environment
