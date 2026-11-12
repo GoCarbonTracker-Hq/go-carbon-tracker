@@ -12,13 +12,13 @@ Use this skill when the user runs `/gct update`, `/gct-update`, or asks to updat
 1. **Synchronize Repositories**:
    Pull latest commits for `gct-release` and `GTC RND/go-carbon-tracker`:
    ```bash
-   cd "/Users/varunmoka/GTC/gct-release" && git pull origin main
-   cd "/Users/varunmoka/GTC/GTC RND/go-carbon-tracker" && git pull origin main
+   cd "$HOME/GTC/gct-release" && git pull origin main
+   cd "$HOME/GTC/GTC RND/go-carbon-tracker" && git pull origin main
    ```
 
 2. **Ensure Build Freshness**:
    ```bash
-   cd "/Users/varunmoka/GTC/GTC RND/go-carbon-tracker"
+   cd "$HOME/GTC/GTC RND/go-carbon-tracker"
    .venv/bin/pip install -e .
    ```
 

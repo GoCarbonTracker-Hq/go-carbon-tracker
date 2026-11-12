@@ -20,13 +20,13 @@ When invoked with `update`:
 1. **Synchronize Repositories**:
    Ensure both `gct-release` and `GTC RND/go-carbon-tracker` are synced with `main`:
    ```bash
-   cd "/Users/varunmoka/GTC/gct-release" && git pull origin main
-   cd "/Users/varunmoka/GTC/GTC RND/go-carbon-tracker" && git pull origin main
+   cd "$HOME/GTC/gct-release" && git pull origin main
+   cd "$HOME/GTC/GTC RND/go-carbon-tracker" && git pull origin main
    ```
 
 2. **Verify Python & Frontend Environment**:
    ```bash
-   cd "/Users/varunmoka/GTC/GTC RND/go-carbon-tracker"
+   cd "$HOME/GTC/GTC RND/go-carbon-tracker"
    .venv/bin/pip install -e .
    ```
    If frontend source files under `viewer/src/` changed without a dist rebuild:
@@ -35,7 +35,7 @@ When invoked with `update`:
    ```
 
 3. **Execute Incremental Workspace Pipeline**:
-   Target the workspace specified in `$ARGUMENTS` (defaults to current active workspace or `/Users/varunmoka/GTC/GTC RND/adidas-workspace`):
+   Target the workspace specified in `$ARGUMENTS` (defaults to current active workspace or `$HOME/GTC/GTC RND/adidas-workspace`):
    ```bash
    gct update --workspace "$WORKSPACE"
    ```
