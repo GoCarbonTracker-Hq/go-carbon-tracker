@@ -444,7 +444,7 @@ If you use GoCarbonTracker or the HyperGraphRAG architecture in your research or
   title   = {Claims as Hyperedges: Auditable Multi-Hop Retrieval and Discourse Reasoning over Enterprise Disclosures},
   author  = {Moka, Varun},
   year    = {2026},
-  journal = {GoCarbonTracker Research Preprint (arXiv v5.0)},
+  journal = {GoCarbonTracker Research Preprint (v5.0)},
   url     = {https://gocarbontracker.net/paper},
   note    = {PDF available at https://gocarbontracker.net/paper.pdf}
 }
