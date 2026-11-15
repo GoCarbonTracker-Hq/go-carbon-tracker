@@ -200,6 +200,8 @@ The sample report in `examples/` is a one-page test document, so the quick start
 
 Open an [issue](https://github.com/GoCarbonTracker-Hq/go-carbon-tracker/issues) with the command you ran and what it printed. `gct troubleshoot export` writes a folder with the version and the run log; read it before you attach it, for the reasons under [Status](#status).
 
+[CONTRIBUTING.md](CONTRIBUTING.md) covers pull requests, [SECURITY.md](SECURITY.md) says how to report a security problem privately, and [CHANGELOG.md](CHANGELOG.md) lists what changed.
+
 ## Licence
 
 [MIT](LICENSE). [ORIGINS.md](ORIGINS.md) logs code copied or adapted from other GoCarbonTracker repositories.
