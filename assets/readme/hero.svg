@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="440" viewBox="0 0 1200 440" role="img" aria-labelledby="hero-title hero-desc">
+  <title id="hero-title">GoCarbonTracker (GCT)</title>
+  <desc id="hero-desc">Every figure, back to its page. A page from the sample report in this repository with one figure highlighted, Total Scope 1 emissions 1,240.5 tCO2e, and a note showing the claim gct stored for it: claim 1, page 1, the box on the page, source matched.</desc>
+
+  <defs>
+    <filter id="lift" x="-10%" y="-10%" width="120%" height="130%">
+      <feDropShadow dx="0" dy="10" stdDeviation="12" flood-color="#000000" flood-opacity="0.18"/>
+    </filter>
+    <filter id="lift-s" x="-10%" y="-10%" width="120%" height="140%">
+      <feDropShadow dx="0" dy="4" stdDeviation="5" flood-color="#000000" flood-opacity="0.16"/>
+    </filter>
+  </defs>
+
+  <rect width="1200" height="440" rx="18" fill="#ECE7DC"/>
+
+  <g id="title-block" transform="translate(64 0)">
+    <text x="0" y="112" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="18" letter-spacing="3" fill="#B4372A">GOCARBONTRACKER (GCT)</text>
+    <text font-family="Georgia, 'Times New Roman', serif" font-size="64" font-weight="700" fill="#111111">
+      <tspan x="-3" y="190">Every figure,</tspan>
+      <tspan x="-3" y="260">back to its page.</tspan>
+    </text>
+    <text font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="24" fill="#333333">
+      <tspan x="0" y="318">Reads company climate reports on your</tspan>
+      <tspan x="0" y="350">own computer and keeps each number</tspan>
+      <tspan x="0" y="382">as a claim you can check.</tspan>
+    </text>
+  </g>
+
+  <!-- a page of the sample report, with the figure gct linked -->
+  <g id="report-page" transform="translate(650 62) rotate(-1.5)">
+    <rect width="470" height="292" fill="#FFFFFF" filter="url(#lift)"/>
+    <text x="446" y="34" text-anchor="end" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="18" fill="#999999">p. 1</text>
+    <text x="28" y="58" font-family="Georgia, 'Times New Roman', serif" font-size="20" font-weight="700" fill="#111111">sample_sustainability_report.pdf</text>
+
+    <g font-family="Georgia, 'Times New Roman', serif" font-size="19" fill="#444444">
+      <rect x="296" y="82" width="152" height="30" fill="#FFE45C" stroke="#B4372A" stroke-width="2"/>
+      <text x="28" y="104">Total Scope 1 emissions</text>
+      <text x="440" y="104" text-anchor="end" font-weight="700" fill="#111111">1,240.5 tCO2e</text>
+      <line x1="28" y1="120" x2="442" y2="120" stroke="#DDDDDD"/>
+      <text x="28" y="148">Total energy consumed</text>
+      <text x="440" y="148" text-anchor="end">85,400.0 GJ</text>
+      <line x1="28" y1="164" x2="442" y2="164" stroke="#DDDDDD"/>
+      <text x="28" y="192">Total Scope 2 emissions</text>
+      <text x="440" y="192" text-anchor="end">3,810.2 tCO2e</text>
+      <line x1="28" y1="208" x2="442" y2="208" stroke="#DDDDDD"/>
+      <text x="28" y="236">Renewable electricity share</text>
+      <text x="440" y="236" text-anchor="end">42.5 %</text>
+      <line x1="28" y1="252" x2="442" y2="252" stroke="#DDDDDD"/>
+    </g>
+  </g>
+
+  <!-- the claim gct stored for the highlighted figure -->
+  <g id="claim-note" transform="translate(852 320) rotate(2)">
+    <rect width="296" height="104" rx="8" fill="#FFFFFF" stroke="#B4372A" stroke-width="2.5" filter="url(#lift-s)"/>
+    <text font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="18" fill="#B4372A">
+      <tspan x="18" y="34">claim 1 · page 1</tspan>
+      <tspan x="18" y="60">box 324, 224, 364, 236</tspan>
+      <tspan x="18" y="86">source: matched</tspan>
+    </text>
+  </g>
+</svg>

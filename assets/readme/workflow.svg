@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="270" viewBox="0 0 1200 270" role="img" aria-labelledby="wf-title wf-desc">
+  <title id="wf-title">How gct works</title>
+  <desc id="wf-desc">Six steps: add a report, read its pages, extract the figures, link each figure to its box on the page, publish a numbered data version, and view the claim next to its page.</desc>
+
+  <defs>
+    <filter id="card" x="-10%" y="-10%" width="120%" height="140%">
+      <feDropShadow dx="0" dy="4" stdDeviation="5" flood-color="#000000" flood-opacity="0.14"/>
+    </filter>
+  </defs>
+
+  <rect width="1200" height="270" rx="18" fill="#ECE7DC"/>
+  <line x1="60" y1="60" x2="1140" y2="60" stroke="#B4372A" stroke-width="2" stroke-dasharray="2 8" stroke-linecap="round"/>
+
+  <g font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="18" font-weight="700" fill="#FFFFFF">
+    <g fill="#B4372A">
+      <circle cx="127" cy="60" r="17"/><circle cx="316" cy="60" r="17"/><circle cx="505" cy="60" r="17"/>
+      <circle cx="694" cy="60" r="17"/><circle cx="883" cy="60" r="17"/><circle cx="1072" cy="60" r="17"/>
+    </g>
+    <text x="127" y="66" text-anchor="middle">1</text><text x="316" y="66" text-anchor="middle">2</text>
+    <text x="505" y="66" text-anchor="middle">3</text><text x="694" y="66" text-anchor="middle">4</text>
+    <text x="883" y="66" text-anchor="middle">5</text><text x="1072" y="66" text-anchor="middle">6</text>
+  </g>
+
+  <g fill="#FFFFFF" filter="url(#card)">
+    <rect x="40" y="96" width="174" height="116"/>
+    <rect x="229" y="96" width="174" height="116"/>
+    <rect x="418" y="96" width="174" height="116"/>
+    <rect x="607" y="96" width="174" height="116" fill="#FFE45C"/>
+    <rect x="796" y="96" width="174" height="116"/>
+    <rect x="985" y="96" width="174" height="116"/>
+  </g>
+  <rect x="607" y="96" width="174" height="116" fill="none" stroke="#B4372A" stroke-width="2"/>
+
+  <g font-family="Georgia, 'Times New Roman', serif" font-size="24" font-weight="700" fill="#111111">
+    <text x="56" y="134">Add</text><text x="245" y="134">Read</text><text x="434" y="134">Extract</text>
+    <text x="623" y="134">Link</text><text x="812" y="134">Publish</text><text x="1001" y="134">View</text>
+  </g>
+
+  <g font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="18" fill="#333333">
+    <text><tspan x="56" y="166">a report:</tspan><tspan x="56" y="190">PDF, CSV, XLSX</tspan></text>
+    <text><tspan x="245" y="166">every page:</tspan><tspan x="245" y="190">words, tables</tspan></text>
+    <text><tspan x="434" y="166">the figures,</tspan><tspan x="434" y="190">by fixed rules</tspan></text>
+    <text><tspan x="623" y="166">each figure to</tspan><tspan x="623" y="190">its page box</tspan></text>
+    <text><tspan x="812" y="166">a numbered</tspan><tspan x="812" y="190">data version</tspan></text>
+    <text><tspan x="1001" y="166">the claim next</tspan><tspan x="1001" y="190">to its page</tspan></text>
+  </g>
+
+  <g font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="18" fill="#B4372A">
+    <text x="40" y="246">gct doc add</text><text x="229" y="246">gct read</text><text x="418" y="246">gct extract</text>
+    <text x="607" y="246">gct link</text><text x="796" y="246">gct publish</text><text x="985" y="246">gct serve</text>
+  </g>
+</svg>
