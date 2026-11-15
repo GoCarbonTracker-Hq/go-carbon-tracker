@@ -1,32 +1,35 @@
 <p align="center">
-  <img src="docs/assets/gct-logo.png" alt="GoCarbonTracker Logo" width="120" />
-</p>
-
-<h1 align="center">GoCarbonTracker (GCT)</h1>
-
-<p align="center">
-  <strong>An open-source workspace and evidence engine for corporate climate disclosures, tracing claims to document pages with an append-only audit trail.</strong>
+  <img src="assets/readme/hero.svg" width="100%" alt="GoCarbonTracker (GCT): every figure in a company report, traced to its page. The example is one claim read from the sample report: Total Scope 1 emissions, 1,240.5 tCO2e, page 1, with the box on the page that holds the figure.">
 </p>
 
 <p align="center">
-  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-green.svg" alt="License: MIT" /></a>
-  <a href="https://www.python.org/downloads/"><img src="https://img.shields.io/badge/python-%3E%3D%203.11-blue.svg" alt="Python >= 3.11" /></a>
-  <img src="https://img.shields.io/badge/tests-1467%20passed-brightgreen.svg" alt="1467 Tests Passed" />
-  <img src="https://img.shields.io/badge/release-v0.2.1--alpha-orange.svg" alt="Release: v0.2.1-alpha" />
-  <img src="https://img.shields.io/badge/architecture-local--first-purple.svg" alt="Local First" />
-  <a href="https://gocarbontracker.net/paper"><img src="https://img.shields.io/badge/Paper-Claims%20as%20Hyperedges%20(v5.0)-10b981.svg" alt="Research Paper: Claims as Hyperedges" /></a>
-  <a href="https://gocarbontracker.net/paper.pdf"><img src="https://img.shields.io/badge/PDF-20%20Pages-ef4444.svg" alt="Download Paper PDF" /></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/licence-MIT-1F6F4A" alt="MIT licence"></a>
+  <img src="https://img.shields.io/badge/python-3.11%2B-14161A" alt="Python 3.11 or later">
+  <a href="https://github.com/GoCarbonTracker-Hq/go-carbon-tracker/releases"><img src="https://img.shields.io/github/v/release/GoCarbonTracker-Hq/go-carbon-tracker?include_prereleases&color=14161A" alt="Latest release"></a>
+  <a href="#status"><img src="https://img.shields.io/badge/status-alpha%2C%20experimental-8A8F98" alt="Alpha, experimental"></a>
 </p>
+
+# GoCarbonTracker (GCT)
+
+**Read what a company publishes about its climate performance, and keep each figure as a claim traced to its document and page.**
+
+## Overview
+
+Scope 3 and procurement teams, auditors and reporting teams work from sustainability reports that run to hundreds of pages. A figure copied into a spreadsheet loses its page, its unit and the boundary it was reported for, and a later report can restate it without saying so. `gct` is a command-line tool with a local viewer that reads those reports on your own computer. It stores each figure with the page and the box on the page it came from, proposes its period and boundary from the report's own wording, and lines figures up across years.
+
+This is alpha software. Its no-model extraction rules fail the project's own accuracy target (see [Claims](#claims)), and its sharing features are not verified to keep private content out (see [Status](#status)). It records what a company reported. It does not say what a company emitted or whether a claim is true.
+
+Maintained by [GoCarbonTracker](https://gocarbontracker.net).
+
+## System Architecture
 
 <p align="center">
-  <a href="https://gocarbontracker.net">Website</a> •
-  <a href="https://gocarbontracker.net/paper">Research Paper</a> •
-  <a href="https://gocarbontracker.net/paper.pdf">PDF</a> •
-  <a href="https://hypergraph.gocarbontracker.net">Interactive Hypergraph</a> •
-  <a href="https://dashboard.gocarbontracker.net">Dashboard</a>
+  <img src="assets/readme/workflow.svg" width="100%" alt="Six steps: add a report, read its pages, extract the figures, link each figure to its box on the page, publish a numbered data version, and view the claim next to its page.">
 </p>
 
----
+A workspace is a folder with a SQLite database and a copy of every file you add. `gct read` reads each PDF page with pdfplumber: text, words with their positions, and ruled tables. `gct extract` lists the figures on each page with fixed rules, and `gct link` checks that the stored box on the page reproduces each figure. `gct infer` and `gct match` propose a period, a boundary and a metric key, which stay proposals until you accept them. `gct publish build` freezes a numbered, read-only data version, and `gct serve` shows it in your browser.
+
+Nothing is overwritten. A correction is a new version of a claim, and every table except the schema version rejects updates and deletes.
 
 ## Status
 
@@ -40,8 +43,6 @@ This is experimental software. Do not rely on it to keep private material out of
   - A credential written in fullwidth characters is removed from every report format, but it ships in the database files inside a package.
 - The leakage check that was run on exports made from real data left 15 images unread, so that check has not passed.
 - None of these is fixed in this version. Read any sanitised output or package before you share it. [docs/privacy.md](docs/privacy.md) records the limits of the credential check under "What never leaves".
-
----
 
 ## Setup
 
@@ -65,168 +66,59 @@ pip install -e '.[dev]' 'setuptools>=77'
 pytest
 ```
 
----
+## Quick start
 
-## Overview
-
-Corporate sustainability reporting suffers from an **assurance deficit**:
-* **Questionnaires fail to verify**: Scope 3 decarbonization programs rely heavily on questionnaires where suppliers check boxes without attaching verifiable proof.
-* **Manual reading does not scale**: Analysts spend weeks combing through 150-page sustainability reports (PDF, BRSR, CSRD, GRI tables) to copy-paste numbers into spreadsheets. Transcription errors occur, and citation context is lost.
-* **Restatements disappear**: Companies regularly adjust historical baseline figures in subsequent disclosures without drawing attention to the changes.
-
-**GoCarbonTracker (`gct`)** is a local-first workspace and evidence engine. It ingests corporate sustainability filings, extracts quantitative climate metrics (Scope 1, Scope 2, Scope 3 categories, energy usage, targets), and **anchors every single claim directly to its exact page coordinate and bounding box on the original document**, backed by an append-only audit trail.
-
----
-
-## Who is It For?
-
-| Role | Operational Problem | How GoCarbonTracker Solves It |
-| :--- | :--- | :--- |
-| **Scope 3 & Procurement Leads** | Cannot meter suppliers' factories; questionnaire response rates are low and unverified. | Ingests suppliers' published reports; provides a queryable portfolio with page-level citations for every Scope 1, 2, and 3 metric. |
-| **Sustainability Auditors** | Demands checkable evidence, not opaque AI summaries or unverified spreadsheets. | Provides an interactive click-to-highlight viewer that navigates straight to the source table cell or paragraph. |
-| **Corporate Reporting Teams** | Prepares CSRD/SEC/BRSR filings; needs to track multi-year baseline restatements and review history. | Automatically surfaces restatements across annual disclosure cycles with immutable change logs. |
-
----
-
-## System Architecture
-
-GoCarbonTracker is built as a **local-first, deterministic evidence pipeline**. It runs entirely on your local machine with zero external network dependencies required during core operations.
-
-```mermaid
-flowchart LR
-    A["Source Filings<br/>(PDF, CSV, XLSX)"] --> B["Dual-Rung Reader<br/>(Docling + pdfplumber)"]
-    B --> C["Append-Only Store<br/>(SQLite / Snapshots)"]
-    C --> D["Evidence Viewer<br/>(Highlights & Graphs)"]
-```
-
----
-
-## Practitioner Workflow
-
-```mermaid
-flowchart LR
-    A["1. Init Workspace"] --> B["2. Ingest Filings"]
-    B --> C["3. Extract & Link Boxes"]
-    C --> D["4. Restate & Audit Flags"]
-    D --> E["5. Freeze Snapshot"]
-    E --> F["6. Explore in Viewer"]
-```
-
----
-
-## Installation
-
-### Prerequisites
-* **Python**: `>= 3.11` (Tested and benchmarked on Python 3.13 macOS Apple Silicon). Check with `python3 --version`.
-
-### Option A: Standard User Installation
-Installs `gct` into an isolated virtual environment:
+After [Setup](#setup), read the sample report that ships with the repository:
 
 ```bash
-# Clone the repository
-git clone https://github.com/GoCarbonTracker-Hq/go-carbon-tracker.git
-cd go-carbon-tracker
-
-# Create and activate virtual environment
-python3 -m venv .venv
-source .venv/bin/activate
-
-# Install package
-pip install .
-
-# Verify installation
-gct --version
+gct workspace init demo
+gct company add "Acme Global" --workspace demo
+gct doc add examples/sample_sustainability_report.pdf --company "Acme Global" --workspace demo
+gct read --workspace demo
+gct extract --workspace demo
+gct update --workspace demo        # link, infer, match and publish in one step
+gct claims list --doc 1 --workspace demo
 ```
 
-### Option B: Contributor & Developer Installation (with Test Suite)
-Installs editable development dependencies, test harness, and build tools:
+The last command prints one line per claim. The first two, shortened:
+
+```text
+1  p1  current  1,240.5   tCO2e  Total Scope 1 emissions  FY 2024-25  matched  box 324, 224.48, 364.03, 236.48
+2  p1  current  85,400.0  GJ     Total energy consumed    FY 2024-25  matched  box 324, 244.48, 370.7, 256.48
+```
+
+To see each claim next to its source page:
 
 ```bash
-cd go-carbon-tracker
-python3 -m venv .venv
-source .venv/bin/activate
-
-# Install editable with dev dependencies
-pip install -e '.[dev]' 'setuptools>=77'
-
-# Run the automated test suite
-pytest
+gct serve --workspace demo
 ```
 
----
-
-## Quickstart Tutorial
-
-Follow this 5-minute walkthrough to initialize a workspace, ingest a disclosure, and explore the interactive evidence viewer.
-
-### 1. Initialize a Workspace
-```bash
-gct workspace init company-audit
-```
-*Creates the workspace directory structure: SQLite database, file store, layout artifacts, published snapshots, and run logs.*
-
-### 2. Register an Organisation
-```bash
-gct company add "Acme Global" --workspace company-audit
-```
-
-### 3. Add Corporate Disclosures
-```bash
-# Add reports (or use the included sample: examples/sample_sustainability_report.pdf)
-gct doc add examples/sample_sustainability_report.pdf --company "Acme Global" --workspace company-audit
-```
-*The file is hashed with SHA-256. If duplicate bytes are uploaded under a different name, `gct` rejects the duplicate and references the original.*
-
-### 4. Read Layout & Extract Claims
-```bash
-# 1. Deterministic text, table, and deep layout parsing (pdfplumber + Docling)
-gct read --workspace company-audit
-
-# 2. Extract quantitative emissions metrics and qualitative climate commitments (Rung 1 & 2)
-gct extract --workspace company-audit
-
-# 3. Anchor claims to physical bounding boxes on the document page
-gct link --workspace company-audit
-
-# 4. Infer reporting periods and organizational boundaries
-gct infer --workspace company-audit
-
-# 5. Harmonize claims and match cross-report time series
-gct match --workspace company-audit
-```
-
-### 5. Audit Restatements & Propose Greenwashing Candidates
-```bash
-# Detect multi-year restatements and baseline discrepancies
-gct restate --workspace company-audit
-
-# Scan narrative & quantitative claims against evidence with EmeraldMind 4-type taxonomy (Auditor Copilot)
-gct flag propose --company "Acme Global" --workspace company-audit
-
-# Inspect proposed greenwashing candidate flags
-gct flag list --workspace company-audit
-```
-*Note: Under FR39 responsible governance, candidate flags are proposals for human auditor review and must be confirmed (`gct flag raise`) by an auditor before becoming part of an official published record.*
-
-### 6. Freeze Published Version Snapshot
-```bash
-gct publish build --workspace company-audit
-```
-*Freezes read-only data version `v1.db`. Any subsequent audit annotations or revisions generate `v2.db`.*
-
-### 7. Launch the Local Interactive Evidence Viewer
-```bash
-gct serve --workspace company-audit
-```
-*Starts a secured local service and opens your default browser at `http://127.0.0.1:8765/?token=...`.*
-
-* **Interactive Side-by-Side View**: Browse the claims table on the left; click any figure to jump directly to the PDF page on the right with the number highlighted in yellow.
-* **Dual-Track Review**: Add company self-declarations, record auditor verifications, or flag restatements.
-* **Explore Visual Graphs**: Open the **Graphs** tab to explore claims mapped across **Neighbourhood**, **Hypergraph**, and **Time-Series** views.
-
----
+`gct serve` prints an address with a one-time session key and opens it in your browser. The service listens on this computer only.
 
 ## What works today
+
+- **Workspace and documents.** Registers PDF, XLSX and CSV files for a company, from a file, a folder or a direct link. Each original is stored once by its SHA-256.
+- **Reading.** Reads every page of a PDF with pdfplumber and records, per page, how it was read and any quality flags.
+- **Claims.** Lists figures in ruled tables and figures followed by a unit in the text. Each claim keeps the metric wording, the value and unit as printed, the period label and its place on the page.
+- **Period, boundary and series.** Proposes each claim's period and reporting boundary from the report's wording, gives it a metric key from a fixed list, and links it across periods and reports ([docs/matching.md](docs/matching.md)).
+- **Restatements.** Pairs figures for the same metric, period and boundary and records whether they are the same value, a restatement or a conflict ([docs/restatements.md](docs/restatements.md)).
+- **Review records.** Company confirmations, auditor reviews, highlights and reviewer flags are kept as records made by named contributors. GCT never records a review outcome of its own ([docs/reviews.md](docs/reviews.md)).
+- **Flag candidates.** `gct flag propose` lists claims a reviewer may want to look at. A candidate is a proposal; only a reviewer raises a flag.
+- **Published versions.** Numbered, read-only data versions, with a run log of what built them.
+- **Viewer.** A local page with the claims, the source page with the figure outlined, and Tables and Graphs views ([docs/views.md](docs/views.md)).
+- **Reports and packages.** Report data as JSON, PDF or a single HTML page, and a copy of the workspace for someone else ([docs/reports.md](docs/reports.md), [docs/packages.md](docs/packages.md)).
+
+`gct --help` lists every command, and `--json` works on each one ([docs/cli-json.md](docs/cli-json.md)). The full detail is in the block at the end of this section.
+
+Two parts are off unless you turn them on:
+
+- **Docling reading.** With Docling installed and `GCT_USE_DOCLING=1` set, `gct read` takes tables and paragraphs from Docling.
+- **Sentence filter.** With `pip install '.[models]'`, `gct extract` also runs the `climatebert/environmental-claims` model on your computer to pick out environmental-claim sentences that carry no figure.
+
+Paid model work and sending private content to an outside service each need their own approval, and both are off by default ([docs/models.md](docs/models.md)).
+
+<details>
+<summary>Every command in detail</summary>
 
 - `gct workspace init PATH` creates a workspace folder (SQLite database plus `files/`, `artifacts/`, `published/`, `exports/`, `logs/`).
 - `gct company add NAME` and `gct company list`.
@@ -248,19 +140,7 @@ gct serve --workspace company-audit
 - Only one command that changes a workspace runs at a time: a second one is refused (exit 4) until the first finishes. Commands that only look (`list`, `show`, `status`, `doc pages`, `run list`, `run show`, `serve`) are not held up (apart from a one-time workspace upgrade), so you can watch a long run. The lock is the operating system's, on `workspace.lock`; it goes away with the process, also after a crash.
 - A failed command prints one cause and one next step, also for a mistyped option (exit codes and the run log in `docs/troubleshooting.md`). `gct --version` prints the version. `gct troubleshoot export` writes `exports/troubleshooting-<time>/` with the versions, counts and run history a maintainer needs to help, and no document, company or contributor name, path or key; read it before you send it.
 
----
-
-## Claims
-
-Claims from `gct extract` come from fixed reading rules (a no-model baseline). Their accuracy was measured once, against a private gold set of 170 figures from the reports of two real companies (scorer version 1, gold commit 3985743). The gold set has three groups; the result was 0 of 80 Found in the text group, 0 of 50 in the table group and 0 of 40 in the figure group. Found means value, unit, metric, entity, boundary and period all match the gold row. The release plan's accuracy gate (G2) sets a target of 90% Found in each group, so the no-model baseline fails it. The gold set is private and is not in this repository.
-
-- `gct extract [ID ...] [--company NAME]` lists the figures on every read page: numbers in ruled tables, and numbers followed by a unit (`tCO2e`, `MWh`, `%` and a few more) in the text. Each claim keeps the metric wording, the value, the unit and the period label exactly as printed, plus the page and the box it came from. A value is filled only for a plain Western number (`1,234.5`); other forms such as `1,23,456` or `(12)` keep only the printed text. Years and numbers in the top or bottom 5% of the page are not claims. Units are recognised, never converted; the extracted boundary is `unknown` (see Periods and boundaries). A table figure's box comes from the cell pdfplumber found; when the cell's words do not match the figure, the claim gets no box (its source match is `cited`, reason `no box`), never a guessed one. A page whose reading has not changed is not extracted again; a new reading adds a new version of each claim and keeps the old one. Documents not read yet are skipped with a note.
-- `gct claims list --doc ID` shows one line per claim: claim id, page, value as printed, unit, metric wording, the period (the label as printed until `gct infer` runs, then the dates with a state word, or the label and `unknown` with the reason), the boundary in the same way, the source match status with its reason, and the box when there is one.
-- `gct publish build` includes the newest version of each claim of active documents, with its source location and source match status.
-
----
-
-## Packages
+**Packages**
 
 A package is a copy of the workspace for someone else to reopen, add reports to and process again. gct writes it fresh into `exports/package-v<N>-<stamp>-<mode>/`, with its own data version 1.
 
@@ -270,174 +150,63 @@ A package is a copy of the workspace for someone else to reopen, add reports to 
 
 Both refuse a data version that is out of date (build a fresh one with `gct publish build`) and a token from another preview. A copy of the workspace folder is a complete copy of everything in it. Details are in `docs/packages.md`.
 
----
-
-## Report preview
+**Report preview**
 
 `gct report preview [--filter JSON|@FILE] [--complete] [--include identity,contributor_text,flags] [--data-version V]` shows what a report of the current published version would hold: the version it reads, the rows per report and, for a sanitised output (the default), what it leaves out and why. A sanitised output is designed to leave out every row that names a private document, archived and deleted documents, reviewer flags, contributor text and contributor names (each contributor becomes "Contributor N"), within the limits under [Status](#status); `--include` keeps the named classes. Values such as the review summary are worked out again from the rows that stay, so they read as if the left-out rows did not exist. `--complete` keeps every row, each with its label. When every document in the selection is private, the preview names them and gives the `gct doc label` command. The preview writes nothing, and it refuses a workspace that needs an upgrade until a writing command such as `gct publish build` has upgraded it. Details are in `docs/privacy.md`.
 
----
-
-## Exporting report data
+**Exporting report data**
 
 `gct report all --format json` writes the report data of the current published version into a new folder, `exports/all-v<N>-<stamp>-sanitised/`: `dataset.json`, which holds the evidence index, the restatement log and the gap report with the data version it came from, and `dataset-1.schema.json`, the JSON Schema the file follows, so anyone can check the file without GCT. `evidence-index`, `restatement-log` and `gap-report` work the same way; a JSON export holds the whole dataset whichever you name. The options are those of `gct report preview`: the export is sanitised unless you add `--complete`, and a complete folder ends in `-complete`. The command prints the preview after the files, on your terminal only. It never overwrites an export, and a refused export writes nothing. When the workspace has changed since the version was built, it still exports that version and tells you to run `gct publish build` first if you want the changes. Copies you have exported or shared cannot be recalled by GCT, also after `gct doc delete`. Details are in `docs/reports.md`.
 
 - `--format pdf` writes one PDF per report, for a reader who does not run GCT: the rows, then an evidence appendix that shows each cited figure as a picture of its place on the source page, cut from the stored original with the viewer's renderer and outlined; a sanitised PDF is designed to hold no private text or page image (see [Status](#status)).
 - `--format page` writes one HTML page per report with the same rows and pictures, which opens from the export folder in a browser and runs no script and loads nothing from the network.
 
----
+</details>
+
+## Claims
+
+Claims from `gct extract` come from fixed reading rules (a no-model baseline). Their accuracy was measured once, against a private gold set of 170 figures from the reports of two real companies (scorer version 1, gold commit 3985743). The gold set has three groups; the result was 0 of 80 Found in the text group, 0 of 50 in the table group and 0 of 40 in the figure group. Found means value, unit, metric, entity, boundary and period all match the gold row. The release plan's accuracy gate (G2) sets a target of 90% Found in each group, so the no-model baseline fails it. The gold set is private and is not in this repository.
+
+The sample report in `examples/` is a one-page test document, so the quick start shows how the tool works and says nothing about accuracy on real reports.
+
+- `gct extract [ID ...] [--company NAME]` lists the figures on every read page: numbers in ruled tables, and numbers followed by a unit (`tCO2e`, `MWh`, `%` and a few more) in the text. Each claim keeps the metric wording, the value, the unit and the period label exactly as printed, plus the page and the box it came from. A value is filled only for a plain Western number (`1,234.5`); other forms such as `1,23,456` or `(12)` keep only the printed text. Years and numbers in the top or bottom 5% of the page are not claims. Units are recognised, never converted; the extracted boundary is `unknown` (see Periods and boundaries). A table figure's box comes from the cell pdfplumber found; when the cell's words do not match the figure, the claim gets no box (its source match is `cited`, reason `no box`), never a guessed one. A page whose reading has not changed is not extracted again; a new reading adds a new version of each claim and keeps the old one. Documents not read yet are skipped with a note.
+- `gct claims list --doc ID` shows one line per claim: claim id, page, value as printed, unit, metric wording, the period (the label as printed until `gct infer` runs, then the dates with a state word, or the label and `unknown` with the reason), the boundary in the same way, the source match status with its reason, and the box when there is one.
+- `gct publish build` includes the newest version of each claim of active documents, with its source location and source match status.
 
 ## What does not exist yet
 
-OCR for scanned pages, model-based rungs (no rung above 1 exists yet, so nothing calls a model and no command takes an allowance yet), chart reading, standard metric names, review in the viewer of page acceptance, gap confirmation, infer review and restatement (those stay CLI commands). `docs/setup.md` says what the no-model install reads and does not read.
+- OCR for scanned pages, and chart reading.
+- Any rung that calls a paid or hosted model. No command takes a spending allowance yet.
+- Review in the viewer of page acceptance, gap confirmation, infer review and restatement. Those stay command-line steps.
+- Search or question answering across reports, and work across many companies' suppliers. Both are planned for the next milestone and not built.
 
----
+[docs/setup.md](docs/setup.md) says what the no-model install reads and does not read.
 
-## Core Capabilities & Features
+## Documentation
 
-### 1. Zero-Model & Deep Layout Reading (Rung 1 & Rung 2)
-* **Tiered Reading Architecture**: Operates locally with a dual-rung reading pipeline.
-  * **Rung 1 (Fast Deterministic)**: Uses `pdfplumber` for ruled tables, standard typography, and Indian numeric grouping with zero token spend.
-  * **Rung 2 (Deep Layout & Reading Order)**: Integrates IBM `Docling` (`docling>=2.54.0`) to parse complex corporate report layouts, multi-column reading orders, borderless tables, and rotated headers into structured markup.
-* **Automatic Fallback**: If Docling is not installed or encounters an unsupported structure, `gct` seamlessly falls back to Rung 1 without failing execution.
-* **Environment Control**: Activate Docling across reading runs via `GCT_USE_DOCLING=1` or run document-specific escalation (`gct read <DOC_IDS...>`).
-* **Page Quality Auditing**: Automatically identifies scanned bitmap pages (0 extractable text characters), fragmented text runs, or empty table matrices.
+| Page | What it covers |
+|---|---|
+| [docs/setup.md](docs/setup.md) | Install, offline install, first run, moving a workspace |
+| [docs/methodology.md](docs/methodology.md) | How pages are read and figures extracted |
+| [docs/framework.md](docs/framework.md) | The data model: claims, boundaries, review records |
+| [docs/matching.md](docs/matching.md) | Metric keys, units and series |
+| [docs/restatements.md](docs/restatements.md) | Same value, restatement or conflict |
+| [docs/views.md](docs/views.md) | The viewer's Tables and Graphs |
+| [docs/reports.md](docs/reports.md), [docs/packages.md](docs/packages.md) | Exports and shareable copies |
+| [docs/privacy.md](docs/privacy.md) | Privacy labels and the limits of sanitised output |
+| [docs/troubleshooting.md](docs/troubleshooting.md) | Exit codes, the run log, a diagnostic export |
 
-### 2. Physical Evidence Anchoring
-Every claim stores coordinates in standard PDF points (`[x0, y0, x1, y1]`). Claims receive an unambiguous status:
-* `matched`: Exact character and bounding box match within a detected table cell or text span.
-* `cited`: Referenced in text or footnote without a discrete rectangular cell box.
-* `unresolved`: Unanchored claim flagged for analyst inspection.
+## Reporting a problem
 
-### 3. Multi-Year Harmonization & Restatement Engine
-* Tracks metrics across multiple reporting cycles.
-* Automatically surfaces historical restatements (e.g. when an organization revises its FY21 baseline in its FY24 annual filing).
-* Stores explanatory footnotes and captures contributor rationales.
+Open an [issue](https://github.com/GoCarbonTracker-Hq/go-carbon-tracker/issues) with the command you ran and what it printed. `gct troubleshoot export` writes a folder with the version and the run log; read it before you attach it, for the reasons under [Status](#status).
 
-### 4. Automated Time-Series & Cross-Company Comparison
-* Automated matching groups figures by company, canonical metric key, reporting boundary, and unit family. Besides emissions, energy, water and waste, it links headcount, board, safety, spend and financial totals: counts as counts, and each currency on its own with no exchange rate (see `docs/matching.md`).
-* Proposed periods (including Indian fiscal years ending March 31) and default boundary scopes project directly into queryable time series.
-* Supports dual-track Scope 2 emissions reporting (`ghg_scope_2_location` and `ghg_scope_2_market`).
+## Licence
 
-### 5. Double-Track Audit Ledgers
-* Maintains independent ledgers: **Company Self-Declarations** vs. **Third-Party Auditor Reviews**.
-* Neither track can overwrite the other. Divergences render an active visual disagreement band in the viewer.
-* The underlying SQLite database prohibits SQL `UPDATE` and `DELETE` queries on audit history. Corrections are recorded as appended revisions.
+[MIT](LICENSE). [ORIGINS.md](ORIGINS.md) logs code copied or adapted from other GoCarbonTracker repositories.
 
-### 6. Multi-View Graph Explorer (Cytoscape)
-* **Neighbourhood Graph**: Visualizes a claim node linked to its source page, period, reporting boundary, and review state.
-* **Hypergraph**: Models claims as hyperedges connected to shared hub members (e.g., shared document pages or organizational perimeters).
-* **Time-Series Matrix**: Aligns multi-year figures across reporting cycles, making baseline shifts immediately obvious.
+## Cite
 
-### 7. Audit-Ready Export Packages
-* **JSON Schema Export**: `gct report all --format json` produces canonical machine-readable datasets validated against a public schema.
-* **PDF with Evidence Crops**: `gct report all --format pdf` generates executive reports containing 150 DPI page crops of the exact source evidence.
-* **Air-Gapped Privacy**: Sensitive documents default to `private`. Sanitized export packages strip out user identities, private files, and internal notes.
-
-### 8. Auditor Greenwashing Copilot & EmeraldMind Taxonomy
-To address the assurance deficit without unfair automated allegations, `gct flag propose` scans extracted narrative claims and quantitative targets against source document context using the **EmeraldMind 4-Type Taxonomy**:
-
-* **Type 1 (Factually False / Unaccredited Labels)**: Unverified certifications, unaccredited green labels, or misrepresented ESG compliance standards.
-* **Type 2 (Legal Mandates Framed as Voluntary)**: Framing mandatory statutory obligations (e.g. CSRD, EU ETS compliance) as voluntary corporate climate leadership.
-* **Type 3 (Boundary Mismatch / Scope Overgeneralization)**: Claims asserting whole-company or fleet-wide decarbonization (e.g. "100% zero emissions operations") when supporting evidence reveals it applies only to HQ buildings, a pilot facility, or excludes core subsidiaries.
-* **Type 4 (Direct Factual Contradiction)**: Narrative claims stating progress or emission reductions that are directly contradicted by numbers reported in the disclosure tables (e.g., claiming "reduced carbon footprint" alongside an increase in Scope 1 emissions).
-* **Strict Responsible Abstention**: Missing evidence, vague marketing language, or high ambition without contradictory proof strictly triggers an **Abstain** verdict. Tone-based accusations are strictly forbidden.
-
-#### Interactive Web UI Implementation:
-* **One-Click Flagging**: Select any claim in the evidence viewer and click **"Flag a potential greenwashing concern"** in the sidebar to record your rationale and audit capacity.
-* **Side-by-Side Proof**: Clicking any flagged or candidate claim immediately jumps the PDF viewer to the exact page with physical bounding-box highlighting, allowing instant side-by-side verification of narrative claims against reported table figures.
-* **Filter Bar**: Filter the claims table by review status, including `flag-raised` to review all flagged claims in a portfolio.
-* **Cytoscape Graph Explorer**: Flags render as linked triangular review nodes in both the **Neighbourhood** and **Hypergraph** views.
-* **FR39 Human-in-the-Loop Governance**: Automated scanning proposes unreviewed candidates. Only an auditor or practitioner can confirm (`gct flag raise` or web UI form) and commit a flag to the permanent audit trail.
-
----
-
-## CLI Command Summary
-
-| Command Group | Command Syntax | Description |
-| :--- | :--- | :--- |
-| **Workspace** | `gct workspace init <PATH>` | Initialize a clean workspace directory and database. |
-| | `gct workspace status` | Check schema version, document counts, and latest run status. |
-| **Organisations** | `gct company add <NAME>` | Register an entity or supplier. |
-| | `gct company list` | List registered entities. |
-| **Documents** | `gct doc add <SOURCE...>` | Ingest PDF, CSV, or XLSX files (files, folders, or URLs). |
-| | `gct doc list` | List active documents with SHA-256 hashes and quality flags. |
-| | `gct doc delete <ID>` | Archive or permanently delete a document and purge derived data. |
-| **Extraction** | `gct read` | Extract words, reading order, and tables locally via `pdfplumber` and `Docling`. |
-| | `gct extract` | Extract quantitative emissions and qualitative climate commitments (Rung 1 & 2). |
-| | `gct link` | Map extracted claims to physical bounding boxes on document pages. |
-| | `gct infer` | Propose and resolve reporting periods and organizational boundaries. |
-| | `gct match` | Harmonize claims into canonical metric keys and cross-report series. |
-| **Restatement** | `gct restate` | Detect pairs of figures across reports: same value, restatement or conflict. |
-| **Auditing & Flags** | `gct flag propose [--company NAME]` | Scan narrative and quantitative claims against evidence and propose greenwashing candidates. |
-| | `gct flag raise <CLAIM_ID> --version <V> --rationale <TEXT>` | Confirm and raise an auditor concern on a claim version. |
-| | `gct flag withdraw <CLAIM_ID> --version <V>` | Withdraw an auditor flag on a claim version. |
-| | `gct flag list` | List all reviewer and proposed flags, oldest first. |
-| **Versioning** | `gct publish build` | Freeze current state into an immutable published snapshot (`vN.db`). |
-| | `gct publish restore` | Roll back to the previous published snapshot. |
-| **Viewer** | `gct serve [--port N]` | Launch the local authenticated web viewer. |
-| **Reports** | `gct report all --format [json\|pdf\|page]` | Export evidence indexes, restatement logs, and gap reports. |
-| **Packages** | `gct package create --confirm <TOKEN>` | Create a sanitized or complete workspace bundle for counterparties. |
-| **Auditing** | `gct run list` / `gct run show <ID>` | Inspect execution history, retries, errors, and run parameters. |
-
----
-
-## Milestone 2 Roadmap: HyperGraphRAG & Evidence Retrieval
-
-Milestone 2 (M2) expands GoCarbonTracker from single-document extraction into an evidence-linked retrieval and multi-company intelligence engine:
-
-* **Evidence-Linked HyperGraphRAG**: Natural language search and Q&A across multi-year corporate filings. Queries are strictly constrained by reporting period, organizational boundary, and metric definitions. Every answer cites exact source coordinates ($[x_0, y_0, x_1, y_1]$); if evidence is missing, GCT reports "insufficient evidence" rather than guessing.
-* **Pluggable Jev Reranking (`jev-1.13.0`)**: Two-stage retrieval pairing local high-recall candidate extraction (BM25 + hypergraph index) with TypeSafe Jev for high-precision passage reranking and contradiction adjudication across conflicting claims.
-* **Scope 3 Category 1 Supplier Networks**: Multi-company workspace portfolios mapping supplier-buyer disclosures, automated spreadsheet ingestion, and independent buyer-side reviews vs. supplier confirmations.
-
----
-
-## Theoretical Foundations & Framework Alignment
-
-### Research Foundations
-* **Claims as Hyperedges (HyperGraphRAG)** ([Paper](https://gocarbontracker.net/paper) · [PDF](https://gocarbontracker.net/paper.pdf)): *Claims as Hyperedges: Auditable Multi-Hop Retrieval and Discourse Reasoning over Enterprise Disclosures* (Varun Moka, 2026) — Formalizes the 5-pillar architecture combining hypergraph structural modeling, discourse claim-evidence graphs, multi-signal hybrid retrieval, cross-document contradiction detection, and deterministic bounding-box provenance.
-* **Discourse Knowledge Graphs** ([Chan et al.](https://arxiv.org/abs/2105.00843)): Adapts discourse schemas to represent climate disclosures as structured networks of **Questions**, **Claims**, **Evidence**, and dialectical relations (*corroborates*, *restates*, *contradicts*).
-* **Hypergraph Knowledge Networks** ([Gao et al.](https://arxiv.org/abs/2003.01853), [Sun et al.](https://arxiv.org/abs/2401.05489)): Represents disclosures as high-order hyperedges that simultaneously connect claims across document pages, reporting perimeters, multi-year time series, and supply-chain counterparties.
-
-### Supported ESG Frameworks & Standards
-* **CSRD / ESRS (E1 Climate Change)**: Scope 1, Scope 2 (market/location-based), Scope 3 Categories 1–15, baseline recalculation disclosures, and carbon targets.
-* **GHG Protocol**: Corporate Accounting & Reporting Standard and Corporate Value Chain (Scope 3) Standard.
-* **BRSR (SEBI India)**: Principle 6 Essential Environmental Indicators for listed corporate enterprises.
-* **SEC Climate Rules & ISSB / IFRS S2**: Boundary consolidation rules, double-track assurance records, and multi-year restatement tracking.
-
----
-
-## Documentation Index
-
-Comprehensive documentation is available in the [`docs/`](docs/) directory:
-
-* [**Architecture & Framework**](docs/framework.md) — The GCT climate assurance model, boundary rules, and double-track ledger.
-* [**Extraction Methodology**](docs/methodology.md) — Rung-1 deterministic layout analysis, bounding box extraction, and restatement algorithms.
-* [**Setup & Installation Guide**](docs/setup.md) — Offline installation, platform-specific notes, and cross-machine workspace transfer.
-* [**Views & Visualization**](docs/views.md) — Details on the Tables and Graphs tabs, Cytoscape layouts, and saved views.
-* [**Reporting & Exporting**](docs/reports.md) — Generating JSON Schema datasets, CSVs, and PDF evidence appendixes.
-* [**Privacy & Data Governance**](docs/privacy.md) — Privacy labels, air-gapping, sanitization preview, and export limits.
-* [**Troubleshooting & Run Logs**](docs/troubleshooting.md) — Error codes, recovery procedures, and generating diagnostic packages.
-
----
-
-## Status & Operational Notice
-
-This is **`v0.2.1-alpha` (Story M1 Feature Release)** experimental software. Please note the following verified acceptance boundaries:
-* **Metric list v3 (M1-4.6)**: 43 canonical metric keys with count and currency unit families, so headcount, board, safety, spend and financial totals form series next to emissions, energy, water and waste (`docs/matching.md`). Workspaces upgrade through migration 0023.
-* **Docling Reading Layer**: Deep layout and reading order recovery integrated into `gct read` (Rung 2) alongside deterministic `pdfplumber` (Rung 1).
-* **G2 Scorer v2 Ruler**: Frozen gold benchmark evaluation measuring machine-inferred and human-adjudicated claims with bounding box IoU >= 0.50.
-* **Multi-line Figure Header Stacking**: Automated vertical grouping for category and metric titles in figure stat cards.
-* **Boundary Precision & Segment Matching**: Standalone listed-entity scoping and maximal substring conflict resolution across corporate disclosure boundaries.
-* **Auditor Greenwashing Copilot**: Scans narrative and quantitative claims against report evidence using the EmeraldMind 4-type taxonomy (`gct flag propose`) with strict responsible abstention. Automated candidates are surfaced with visual bounding boxes for human auditor review; GCT never assigns public greenwashing flags autonomously (FR39).
-* **Rung 1 & Rung 2 Extraction**: Extraction combines rule-based parsing (`pdfplumber`, `Docling`) for structured numeric figures with local semantic filtering (`climatebert/environmental-claims` on Apple Silicon MPS / CUDA / CPU) for qualitative environmental commitments. Optional model dependencies are installed via `pip install "gct[models]"`.
-* **Privacy Limits in Sharing Features**: While sanitized packages exclude private documents and contributor names by default, note that PDF metadata, annotations, or fullwidth characters in database files are subject to limits documented in [docs/privacy.md](docs/privacy.md). Always review packages prior to sharing.
-
----
-
-## Citation
-
-If you use GoCarbonTracker or the HyperGraphRAG architecture in your research or audit workflows, please cite our paper ([Read Online](https://gocarbontracker.net/paper) · [Download PDF](https://gocarbontracker.net/paper.pdf)):
+The design follows the working paper *Claims as Hyperedges* ([read online](https://gocarbontracker.net/paper), [PDF](https://gocarbontracker.net/paper.pdf)). It is a preprint and has not been peer reviewed.
 
 ```bibtex
 @article{moka2026hypergraphrag,
@@ -449,10 +218,3 @@ If you use GoCarbonTracker or the HyperGraphRAG architecture in your research or
   note    = {PDF available at https://gocarbontracker.net/paper.pdf}
 }
 ```
-
----
-
-## License & Provenance
-
-* Licensed under the [MIT License](LICENSE).
-* See [ORIGINS.md](ORIGINS.md) for detailed patent, provenance, and dependency attribution notices.

@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="250" viewBox="0 0 1200 250" role="img" aria-labelledby="wf-title wf-desc">
+  <title id="wf-title">How gct works</title>
+  <desc id="wf-desc">Six steps: add a report, read its pages, extract the figures, link each figure to its box on the page, publish a numbered data version, and view the claims beside the page.</desc>
+
+  <rect width="1200" height="250" rx="20" fill="#F7F4EC"/>
+  <rect x="0.75" y="0.75" width="1198.5" height="248.5" rx="20" fill="none" stroke="#14161A" stroke-width="1.5"/>
+
+  <g font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="18" fill="#1F6F4A">
+    <text x="40" y="52">1</text><text x="229" y="52">2</text><text x="418" y="52">3</text>
+    <text x="607" y="52">4</text><text x="796" y="52">5</text><text x="985" y="52">6</text>
+  </g>
+
+  <g fill="#FFFFFF" stroke="#14161A" stroke-width="1.5">
+    <rect x="40" y="66" width="175" height="124" rx="10"/>
+    <rect x="229" y="66" width="175" height="124" rx="10"/>
+    <rect x="418" y="66" width="175" height="124" rx="10"/>
+    <rect x="607" y="66" width="175" height="124" rx="10" fill="#E3F0E8" stroke="#1F6F4A" stroke-width="2"/>
+    <rect x="796" y="66" width="175" height="124" rx="10"/>
+    <rect x="985" y="66" width="175" height="124" rx="10"/>
+  </g>
+
+  <g font-family="Georgia, 'Times New Roman', serif" font-size="24" font-weight="700" fill="#14161A">
+    <text x="56" y="106">Add</text><text x="245" y="106">Read</text><text x="434" y="106">Extract</text>
+    <text x="623" y="106">Link</text><text x="812" y="106">Publish</text><text x="1001" y="106">View</text>
+  </g>
+
+  <g font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="18" fill="#14161A">
+    <text><tspan x="56" y="138">a report:</tspan><tspan x="56" y="162">PDF, CSV, XLSX</tspan></text>
+    <text><tspan x="245" y="138">every page:</tspan><tspan x="245" y="162">words, tables</tspan></text>
+    <text><tspan x="434" y="138">the figures,</tspan><tspan x="434" y="162">by fixed rules</tspan></text>
+    <text><tspan x="623" y="138">each figure to</tspan><tspan x="623" y="162">its page box</tspan></text>
+    <text><tspan x="812" y="138">a numbered</tspan><tspan x="812" y="162">data version</tspan></text>
+    <text><tspan x="1001" y="138">the claim next</tspan><tspan x="1001" y="162">to its page</tspan></text>
+  </g>
+
+  <g font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="18" fill="#5B616B">
+    <text x="40" y="222">gct doc add</text><text x="229" y="222">gct read</text><text x="418" y="222">gct extract</text>
+    <text x="607" y="222">gct link</text><text x="796" y="222">gct publish</text><text x="985" y="222">gct serve</text>
+  </g>
+</svg>
