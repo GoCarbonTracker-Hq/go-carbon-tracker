@@ -2,7 +2,7 @@
   <img src="docs/assets/gct-logo.png" alt="GoCarbonTracker Logo" width="120" />
 </p>
 
-<h1 align="center">GoCarbonTracker (gct)</h1>
+<h1 align="center">GoCarbonTracker (GCT)</h1>
 
 <p align="center">
   <strong>An open-source workspace and evidence engine for corporate climate disclosures, tracing claims to document pages with an append-only audit trail.</strong>
