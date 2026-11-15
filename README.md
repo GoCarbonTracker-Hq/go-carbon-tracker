@@ -1,12 +1,12 @@
 <p align="center">
-  <img src="assets/readme/hero.svg" width="100%" alt="GoCarbonTracker (GCT): every figure in a company report, traced to its page. The example is one claim read from the sample report: Total Scope 1 emissions, 1,240.5 tCO2e, page 1, with the box on the page that holds the figure.">
+  <img src="assets/readme/hero.svg" width="100%" alt="GoCarbonTracker (GCT): every figure, back to its page. A page of the sample report with Total Scope 1 emissions, 1,240.5 tCO2e, highlighted, and a note with the claim gct stored for it: claim 1, page 1, the box on the page, source matched.">
 </p>
 
 <p align="center">
-  <a href="LICENSE"><img src="https://img.shields.io/badge/licence-MIT-1F6F4A" alt="MIT licence"></a>
-  <img src="https://img.shields.io/badge/python-3.11%2B-14161A" alt="Python 3.11 or later">
-  <a href="https://github.com/GoCarbonTracker-Hq/go-carbon-tracker/releases"><img src="https://img.shields.io/github/v/release/GoCarbonTracker-Hq/go-carbon-tracker?include_prereleases&color=14161A" alt="Latest release"></a>
-  <a href="#status"><img src="https://img.shields.io/badge/status-alpha%2C%20experimental-8A8F98" alt="Alpha, experimental"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/licence-MIT-111111" alt="MIT licence"></a>
+  <img src="https://img.shields.io/badge/python-3.11%2B-111111" alt="Python 3.11 or later">
+  <a href="https://github.com/GoCarbonTracker-Hq/go-carbon-tracker/releases"><img src="https://img.shields.io/github/v/release/GoCarbonTracker-Hq/go-carbon-tracker?include_prereleases&color=111111" alt="Latest release"></a>
+  <a href="#status"><img src="https://img.shields.io/badge/status-alpha%2C%20experimental-B4372A" alt="Alpha, experimental"></a>
 </p>
 
 # GoCarbonTracker (GCT)
